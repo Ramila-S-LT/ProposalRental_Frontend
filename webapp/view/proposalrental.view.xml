@@ -1,0 +1,211 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    controllerName="proposalrental.controller.proposalrental">
+
+    <Page
+        id="proposalRentalPage"
+        title="Proposal &amp; Rental Management"
+        enableScrolling="true">
+
+        <content>
+        
+            <Panel
+                headerText="Filters"
+                expandable="true"
+                expanded="true"
+                class="sapUiResponsiveMargin"
+                width="auto">
+
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <core:Icon src="sap-icon://filter" class="sapUiTinyMarginEnd"/>
+                        <Title text="Filters" level="H3"/>
+                    </OverflowToolbar>
+                </headerToolbar>
+
+                <content>
+
+                    <HBox
+                        alignItems="End"
+                        wrap="Wrap">
+
+                        <VBox
+                            width="450px"
+                            class="sapUiSmallMarginEnd sapUiTinyMarginBottom">
+
+                            <Label
+                                text="Date Range"
+                                labelFor="dateRange"/>
+
+                            <DateRangeSelection
+                                id="dateRange"
+                                width="100%"
+                                displayFormat="MMM dd, yyyy"
+                                delimiter=" - "
+                                placeholder="Select date range"/>
+
+                        </VBox>
+
+                        <Button
+                            id="goButton"
+                            text="Go"
+                            icon="sap-icon://filter"
+                            type="Emphasized"
+                            press="onApplyFilters"
+                            class="sapUiSmallMarginEnd sapUiTinyMarginBottom"/>
+
+                        <Button
+                            id="clearButton"
+                            text="Clear"
+                            icon="sap-icon://clear-filter"
+                            press="onClearFilters"
+                            class="sapUiTinyMarginBottom"/>
+
+                    </HBox>
+
+                </content>
+
+            </Panel>
+
+
+            <!-- ================= TABLE ================= -->
+            <VBox class="sapUiResponsiveMargin">
+
+                <MessageStrip
+                    text="Select one approved proposal, then choose Allocate &amp; Create Rental."
+                    type="Information"
+                    showIcon="true"
+                    class="sapUiTinyMarginBottom"/>
+
+                <Table
+                    id="proposalTable"
+                    width="100%"
+                    growing="true"
+                    growingThreshold="20"
+                    growingScrollToLoad="false"
+                    sticky="ColumnHeaders,HeaderToolbar"
+                    alternateRowColors="true"
+                    mode="SingleSelectLeft"
+                    selectionChange="onProposalSelectionChange"
+                    items="{view>/proposals}">
+
+                    <headerToolbar>
+                        <OverflowToolbar>
+
+                            <core:Icon
+                                src="sap-icon://accept"
+                                color="Positive"
+                                class="sapUiTinyMarginEnd"/>
+
+                            <Title
+                                text="Approved Proposals"
+                                level="H3"/>
+
+                            <ToolbarSpacer/>
+
+                            <Button
+                                id="manageRentalButton"
+                                text="Allocate &amp; Create Rental"
+                                icon="sap-icon://shipping-status"
+                                type="Emphasized"
+                                enabled="false"
+                                press="onManageRental"/>
+
+                            <Button
+                                id="refreshButton"
+                                icon="sap-icon://refresh"
+                                type="Transparent"
+                                tooltip="Refresh"
+                                press="onRefresh"/>
+
+                        </OverflowToolbar>
+                    </headerToolbar>
+
+                    <noData>
+                        <IllustratedMessage
+                            illustrationType="sapIllus-NoEntries"
+                            title="No approved proposals found"
+                            description="Change the date range or choose Clear to see all proposals."/>
+                    </noData>
+
+                    <columns>
+
+                        <Column minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="Proposal No"/>
+                        </Column>
+
+                        <Column minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="Date"/>
+                        </Column>
+
+                        <Column minScreenWidth="Desktop" demandPopin="true">
+                            <Text text="Type"/>
+                        </Column>
+
+                        <Column minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="Status"/>
+                        </Column>
+
+                        <Column hAlign="End" minScreenWidth="Tablet" demandPopin="true">
+                            <Text text="Total Amount"/>
+                        </Column>
+
+                        <Column hAlign="Center">
+                            <Text text="View Details"/>
+                        </Column>
+
+                    </columns>
+
+
+                    <items>
+
+                        <ColumnListItem vAlign="Middle">
+
+                            <cells>
+
+                                <ObjectIdentifier
+                                    title="{view>proposalNumber}"
+                                    text="Rental Proposal"/>
+
+                                <ObjectStatus
+                                    text="{view>proposalDate}"
+                                    icon="sap-icon://calendar"/>
+
+                                <ObjectStatus
+                                    text="{view>proposalType}"
+                                    icon="sap-icon://shipping-status"/>
+
+                                <ObjectStatus
+                                    text="{view>proposalStatus}"
+                                    inverted="true"
+                                    icon="sap-icon://status-positive"
+                                    state="{path: 'view>proposalStatus', formatter: '.formatStatusState'}"/>
+
+                                <ObjectNumber
+                                    number="{path: 'view>totalAmount', type: 'sap.ui.model.type.Float', formatOptions: {groupingEnabled: true}}"
+                                    unit="INR"
+                                    emphasized="true"/>
+
+                                <Button
+                                    text="View Details"
+                                    icon="sap-icon://display"
+                                    type="Transparent"
+                                    press="onViewDetails"/>
+
+                            </cells>
+
+                        </ColumnListItem>
+
+                    </items>
+
+                </Table>
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

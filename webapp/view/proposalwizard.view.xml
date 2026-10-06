@@ -1,0 +1,447 @@
+<mvc:View
+    controllerName="proposalrental.controller.proposalwizard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+
+    <Page
+        id="proposalWizardPage"
+        title="Allocate &amp; Create Rental"
+        showNavButton="true"
+        navButtonPress=".onBack"
+        enableScrolling="true">
+
+        <!-- Context banner -->
+        <subHeader>
+            <Toolbar height="4rem">
+                <Avatar
+                    src="sap-icon://document-text"
+                    displaySize="S"
+                    displayShape="Square"
+                    backgroundColor="Accent6"
+                    class="sapUiTinyMarginEnd"/>
+                <VBox>
+                    <Title text="{allocation>/proposalDisplay}" level="H3"/>
+                    <Text text="Customer: {allocation>/customerId}"/>
+                </VBox>
+                <ToolbarSpacer/>
+                <ObjectStatus
+                    text="Approved"
+                    icon="sap-icon://status-positive"
+                    state="Success"
+                    inverted="true"/>
+            </Toolbar>
+        </subHeader>
+
+        <content>
+
+            <Wizard
+                id="proposalWizard"
+                showNextButton="false"
+                complete=".onWizardComplete">
+
+                <!-- ============ STEP 1 : RENTAL CONTRACT ============ -->
+                <WizardStep
+                    id="rentalContractStep"
+                    title="Rental Contract"
+                    icon="sap-icon://document-text"
+                    validated="false">
+
+                    <VBox class="sapUiSmallMargin">
+
+                        <MessageStrip
+                            text="Enter the contract details. Proposal and customer are filled automatically."
+                            type="Information"
+                            showIcon="true"
+                            class="sapUiSmallMarginBottom"/>
+
+                        <Panel
+                            headerText="Create Rental Contract"
+                            width="auto">
+
+                            <headerToolbar>
+                                <Toolbar>
+                                    <core:Icon src="sap-icon://create-form" class="sapUiTinyMarginEnd"/>
+                                    <Title text="Create Rental Contract" level="H3"/>
+                                </Toolbar>
+                            </headerToolbar>
+
+                            <form:SimpleForm
+                                editable="true"
+                                layout="ResponsiveGridLayout"
+                                labelSpanXL="4"
+                                labelSpanL="4"
+                                labelSpanM="4"
+                                labelSpanS="12"
+                                adjustLabelSpan="false"
+                                emptySpanXL="2"
+                                emptySpanL="2"
+                                emptySpanM="2"
+                                emptySpanS="0"
+                                columnsXL="1"
+                                columnsL="1"
+                                columnsM="1">
+
+                                <form:toolbar>
+                                    <Toolbar>
+                                        <Title text="Proposal Information" level="H4"/>
+                                    </Toolbar>
+                                </form:toolbar>
+
+                                <Label text="Proposal"/>
+                                <Input
+                                    id="proposalInput"
+                                    value="{allocation>/proposalDisplay}"
+                                    editable="false"/>
+
+                                <Label text="Customer ID"/>
+                                <Input
+                                    id="customerInput"
+                                    value="{allocation>/customerId}"
+                                    editable="false"/>
+
+                                <core:Title text="Contract Details"/>
+
+                                <Label text="Contract Number" required="true"/>
+                                <Input
+                                    id="contractNumberInput"
+                                    value="{allocation>/contractNumber}"
+                                    placeholder="Enter contract number"/>
+
+                                <Label text="Contract Date" required="true"/>
+                                <DatePicker
+                                    id="contractDateInput"
+                                    value="{allocation>/contractDate}"
+                                    valueFormat="yyyy-MM-dd"
+                                    displayFormat="dd-MM-yyyy"/>
+
+                                <Label text="Start Date" required="true"/>
+                                <DatePicker
+                                    id="startDateInput"
+                                    value="{allocation>/startDate}"
+                                    valueFormat="yyyy-MM-dd"
+                                    displayFormat="dd-MM-yyyy"/>
+
+                                <Label text="End Date" required="true"/>
+                                <DatePicker
+                                    id="endDateInput"
+                                    value="{allocation>/endDate}"
+                                    valueFormat="yyyy-MM-dd"
+                                    displayFormat="dd-MM-yyyy"/>
+
+                                <Label text="Total Rental Amount" required="true"/>
+                                <Input
+                                    id="totalRentalAmountInput"
+                                    value="{allocation>/totalRentalAmount}"
+                                    type="Number"
+                                    description="INR"
+                                    fieldWidth="70%"
+                                    placeholder="Enter amount"/>
+
+                            </form:SimpleForm>
+
+                        </Panel>
+
+                        <HBox
+                            justifyContent="End"
+                            class="sapUiSmallMarginTop">
+
+                            <Button
+                                id="rentalNextButton"
+                                text="Next"
+                                icon="sap-icon://navigation-right-arrow"
+                                iconFirst="false"
+                                type="Emphasized"
+                                press=".onRentalNext"/>
+
+                        </HBox>
+
+                    </VBox>
+
+                </WizardStep>
+
+
+                <!-- ============ STEP 2 : EQUIPMENT ALLOCATION ============ -->
+                <WizardStep
+                    id="equipmentAllocationStep"
+                    title="Equipment Allocation"
+                    icon="sap-icon://shipping-status"
+                    validated="false">
+
+                    <VBox class="sapUiSmallMargin">
+
+                        <MessageStrip
+                            text="Select one or more available equipment items to allocate to this rental."
+                            type="Information"
+                            showIcon="true"
+                            class="sapUiSmallMarginBottom"/>
+
+                        <Table
+                            id="availableEquipmentTable"
+                            mode="MultiSelect"
+                            growing="true"
+                            growingThreshold="20"
+                            sticky="ColumnHeaders,HeaderToolbar"
+                            alternateRowColors="true"
+                            items="{allocation>/availableEquipment}"
+                            selectionChange=".onEquipmentSelectionChange">
+
+                            <headerToolbar>
+                                <OverflowToolbar>
+
+                                    <core:Icon src="sap-icon://machine" class="sapUiTinyMarginEnd"/>
+
+                                    <Title
+                                        text="Available Equipment"
+                                        level="H3"/>
+
+                                    <ToolbarSpacer/>
+
+                                    <ObjectStatus
+                                        text="Selected: {allocation>/selectedEquipmentCount}"
+                                        icon="sap-icon://multiselect-all"
+                                        state="Information"
+                                        inverted="true"/>
+
+                                </OverflowToolbar>
+                            </headerToolbar>
+
+                            <noData>
+                                <IllustratedMessage
+                                    illustrationType="sapIllus-NoData"
+                                    title="No available equipment found"
+                                    description="All equipment is currently allocated. Try again later."/>
+                            </noData>
+
+                            <columns>
+
+                                <Column>
+                                    <Text text="Equipment ID"/>
+                                </Column>
+
+                                <Column minScreenWidth="Tablet" demandPopin="true">
+                                    <Text text="Equipment Name"/>
+                                </Column>
+
+                                <Column hAlign="End" minScreenWidth="Tablet" demandPopin="true">
+                                    <Text text="Status"/>
+                                </Column>
+
+                            </columns>
+
+                            <items>
+
+                                <ColumnListItem vAlign="Middle">
+
+                                    <cells>
+
+                                        <ObjectIdentifier
+                                            title="{allocation>equipmentId}"/>
+
+                                        <ObjectStatus
+                                            text="{allocation>equipmentName}"
+                                            icon="sap-icon://machine"/>
+
+                                        <ObjectStatus
+                                            text="{allocation>status}"
+                                            state="Success"
+                                            icon="sap-icon://status-positive"/>
+
+                                    </cells>
+
+                                </ColumnListItem>
+
+                            </items>
+
+                        </Table>
+
+                        <HBox
+                            justifyContent="SpaceBetween"
+                            class="sapUiSmallMarginTop">
+
+                            <Button
+                                text="Back"
+                                icon="sap-icon://navigation-left-arrow"
+                                press=".onBackToRental"/>
+
+                            <Button
+                                id="equipmentNextButton"
+                                text="Next"
+                                icon="sap-icon://navigation-right-arrow"
+                                iconFirst="false"
+                                type="Emphasized"
+                                enabled="false"
+                                press=".onEquipmentNext"/>
+
+                        </HBox>
+
+                    </VBox>
+
+                </WizardStep>
+
+
+                <!-- ============ STEP 3 : REVIEW ============ -->
+                <WizardStep
+                    id="reviewStep"
+                    title="Review"
+                    icon="sap-icon://survey"
+                    validated="false">
+
+                    <VBox class="sapUiSmallMargin">
+
+                        <MessageStrip
+                            text="Please check all details before completing the rental."
+                            type="Warning"
+                            showIcon="true"
+                            class="sapUiSmallMarginBottom"/>
+
+                        <Panel width="auto">
+
+                            <headerToolbar>
+                                <Toolbar>
+                                    <core:Icon src="sap-icon://detail-view" class="sapUiTinyMarginEnd"/>
+                                    <Title text="Rental Summary" level="H3"/>
+                                </Toolbar>
+                            </headerToolbar>
+
+                            <form:SimpleForm
+                                editable="false"
+                                layout="ResponsiveGridLayout"
+                                labelSpanXL="4"
+                                labelSpanL="4"
+                                labelSpanM="4"
+                                labelSpanS="12"
+                                emptySpanXL="2"
+                                emptySpanL="2"
+                                emptySpanM="2"
+                                emptySpanS="0"
+                                columnsXL="1"
+                                columnsL="1"
+                                columnsM="1">
+
+                                <Label text="Proposal"/>
+                                <Text text="{allocation>/proposalDisplay}"/>
+
+                                <Label text="Customer ID"/>
+                                <Text text="{allocation>/customerId}"/>
+
+                                <Label text="Contract Number"/>
+                                <ObjectStatus
+                                    text="{allocation>/contractNumber}"
+                                    icon="sap-icon://document-text"/>
+
+                                <Label text="Contract Date"/>
+                                <Text text="{allocation>/contractDate}"/>
+
+                                <Label text="Start Date"/>
+                                <ObjectStatus
+                                    text="{allocation>/startDate}"
+                                    icon="sap-icon://calendar"/>
+
+                                <Label text="End Date"/>
+                                <ObjectStatus
+                                    text="{allocation>/endDate}"
+                                    icon="sap-icon://calendar"/>
+
+                                <Label text="Total Rental Amount"/>
+                                <ObjectNumber
+                                    number="{allocation>/totalRentalAmount}"
+                                    unit="INR"
+                                    emphasized="true"
+                                    state="Success"/>
+
+                            </form:SimpleForm>
+
+                        </Panel>
+
+                        <Table
+                            id="selectedEquipmentTable"
+                            class="sapUiSmallMarginTop"
+                            alternateRowColors="true"
+                            items="{allocation>/selectedEquipment}">
+
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <core:Icon src="sap-icon://machine" class="sapUiTinyMarginEnd"/>
+                                    <Title text="Selected Equipment" level="H3"/>
+                                </OverflowToolbar>
+                            </headerToolbar>
+
+                            <noData>
+                                <IllustratedMessage
+                                    illustrationType="sapIllus-NoEntries"
+                                    title="No equipment selected"
+                                    description="Go back and select at least one equipment item."/>
+                            </noData>
+
+                            <columns>
+
+                                <Column>
+                                    <Text text="Equipment ID"/>
+                                </Column>
+
+                                <Column minScreenWidth="Tablet" demandPopin="true">
+                                    <Text text="Equipment Name"/>
+                                </Column>
+
+                                <Column hAlign="End" minScreenWidth="Tablet" demandPopin="true">
+                                    <Text text="Status"/>
+                                </Column>
+
+                            </columns>
+
+                            <items>
+
+                                <ColumnListItem vAlign="Middle">
+
+                                    <cells>
+
+                                        <ObjectIdentifier
+                                            title="{allocation>equipmentId}"/>
+
+                                        <ObjectStatus
+                                            text="{allocation>equipmentName}"
+                                            icon="sap-icon://machine"/>
+
+                                        <ObjectStatus
+                                            text="{allocation>status}"
+                                            state="Success"
+                                            icon="sap-icon://status-positive"/>
+
+                                    </cells>
+
+                                </ColumnListItem>
+
+                            </items>
+
+                        </Table>
+
+                        <HBox
+                            justifyContent="SpaceBetween"
+                            class="sapUiSmallMarginTop">
+
+                            <Button
+                                text="Back"
+                                icon="sap-icon://navigation-left-arrow"
+                                press=".onBackToEquipment"/>
+
+                            <Button
+                                text="Complete"
+                                icon="sap-icon://accept"
+                                type="Accept"
+                                press=".onCompleteRental"/>
+
+                        </HBox>
+
+                    </VBox>
+
+                </WizardStep>
+
+            </Wizard>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

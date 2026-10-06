@@ -1,0 +1,184 @@
+<mvc:View
+    controllerName="proposalrental.controller.App"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core">
+
+    <App id="app">
+
+        <Page
+            id="appPage"
+            backgroundDesign="Solid"
+            enableScrolling="true">
+
+            <!-- Standard Fiori ShellBar (logo + app name + search + notifications + profile) -->
+            <customHeader>
+                <f:ShellBar
+                    id="shellBar"
+                    title="Proposal and Rental System"
+                    homeIcon="data:image/svg+xml;utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='64'%20height='32'%20viewBox='0%200%2064%2032'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%2300b8f1'/%3E%3Cstop%20offset='1'%20stop-color='%230070c0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon%20points='0,0%2064,0%2032,32%200,32'%20fill='url(%23g)'/%3E%3Ctext%20x='5'%20y='22'%20font-family='Arial'%20font-weight='bold'%20font-size='19'%20fill='%23ffffff'%3ESAP%3C/text%3E%3C/svg%3E"
+                    showNotifications="true"
+                    notificationsNumber="2">
+
+                    <f:searchManager>
+                        <f:SearchManager id="searchManager"/>
+                    </f:searchManager>
+
+                    <f:profile>
+                        <Avatar
+                            initials="PR"
+                            tooltip="Profile"/>
+                    </f:profile>
+
+                </f:ShellBar>
+            </customHeader>
+
+            <content>
+
+                <VBox class="sapUiMediumMarginBeginEnd sapUiSmallMarginTop">
+
+                    <!-- Welcome back -->
+                    <HBox
+                        alignItems="Center"
+                        justifyContent="SpaceBetween"
+                        wrap="Wrap">
+
+                        <HBox alignItems="Center">
+
+                            <Avatar
+                                src="sap-icon://shipping-status"
+                                displaySize="M"
+                                displayShape="Square"
+                                backgroundColor="Accent6"
+                                class="sapUiSmallMarginEnd"/>
+
+                            <VBox>
+                                <Title
+                                    text="Welcome back"
+                                    level="H2"
+                                    titleStyle="H1"/>
+                                <Text text="Track rental contracts and allocate equipment to approved proposals"/>
+                            </VBox>
+
+                        </HBox>
+
+                        <ObjectStatus
+                            text="Live"
+                            icon="sap-icon://status-positive"
+                            state="Success"/>
+
+                    </HBox>
+
+                    <core:HTML content="&lt;hr/&gt;"/>
+
+                    <!-- Rental Contracts -->
+                    <Title
+                        text="Rental Contracts"
+                        level="H3"
+                        titleStyle="H3"
+                        class="sapUiTinyMarginTop sapUiSmallMarginBottom"/>
+
+                    <HBox wrap="Wrap">
+
+                        <GenericTile
+                            id="activeTile"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            header="Active"
+                            subheader="Contract Status"
+                            frameType="OneByOne"
+                            press=".onRentalContractPress">
+
+                            <TileContent footer="Currently running">
+                                <NumericContent
+                                    value="{Count>/active}"
+                                    icon="sap-icon://activate"
+                                    valueColor="Good"
+                                    withMargin="false"/>
+                            </TileContent>
+
+                        </GenericTile>
+
+                        <GenericTile
+                            id="completedTile"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            header="Completed"
+                            subheader="Contract Status"
+                            frameType="OneByOne"
+                            press=".onRentalContractPress">
+
+                            <TileContent footer="Successfully closed">
+                                <NumericContent
+                                    value="{Count>/completed}"
+                                    icon="sap-icon://complete"
+                                    valueColor="Neutral"
+                                    withMargin="false"/>
+                            </TileContent>
+
+                        </GenericTile>
+
+                        <GenericTile
+                            id="cancelledTile"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            header="Cancelled"
+                            subheader="Contract Status"
+                            frameType="OneByOne"
+                            press=".onRentalContractPress">
+
+                            <TileContent footer="Terminated contracts">
+                                <NumericContent
+                                    value="{Count>/cancelled}"
+                                    icon="sap-icon://decline"
+                                    valueColor="Error"
+                                    withMargin="false"/>
+                            </TileContent>
+
+                        </GenericTile>
+
+                    </HBox>
+
+                    <!-- Proposals -->
+                    <Title
+                        text="Proposals"
+                        level="H3"
+                        titleStyle="H3"
+                        class="sapUiSmallMarginTop sapUiSmallMarginBottom"/>
+
+                    <HBox wrap="Wrap">
+
+                        <GenericTile
+                            id="approvedTile"
+                            class="sapUiSmallMarginEnd sapUiSmallMarginBottom"
+                            header="Approved Proposals"
+                            subheader="Ready for Allocation"
+                            frameType="OneByOne"
+                            press=".onApprovedProposalPress">
+
+                            <TileContent footer="View Approved Proposals">
+                                <NumericContent
+                                    value="{Count>/approved}"
+                                    icon="sap-icon://accept"
+                                    valueColor="Good"
+                                    withMargin="false"/>
+                            </TileContent>
+
+                        </GenericTile>
+
+                    </HBox>
+
+                    <MessageStrip
+                        text="Select a tile to open the related list. Approved proposals can be allocated equipment and converted to rental contracts."
+                        type="Information"
+                        showIcon="true"
+                        class="sapUiSmallMarginTop sapUiMediumMarginBottom"/>
+
+                </VBox>
+
+            </content>
+
+        </Page>
+
+    </App>
+
+</mvc:View>
