@@ -147,6 +147,7 @@ sap.ui.define([
                         "Approved Proposal Count:",
                         oCounts.approved
                     );
+                    // update
 
                 }.bind(this))
                 .catch(function (oError) {
